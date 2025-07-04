@@ -26,7 +26,7 @@ int main(void)
 	struct timespec time;
 	struct timespec remaining_time;
 	time.tv_sec = 0;
-	time.tv_nsec = 500000000;
+	time.tv_nsec = 200000000;
 
 
 	//I am using a defined int to represent the number of frames (drawings in the animation), that the animation will use. This can be changed and you can insert a given number of frames into the vector of frames
@@ -70,9 +70,15 @@ int main(void)
 
 	for (int i = 0; i < NUM_FRAMES; i++)
 	{
+		//clearing the terminal each time we go to display our frame
 		system("clear");
+
+		//displaying frame to terminal
 		write(STDOUT_FILENO, animation[i], animationSize[i]);
+		
+		//sleeping for set amount of time
 		Nanosleep(time, remaining_time);
+		
 		if (i == NUM_FRAMES - 1)
 		{
 			i = -1;
