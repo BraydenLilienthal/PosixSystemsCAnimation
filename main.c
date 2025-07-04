@@ -79,10 +79,7 @@ int main(void)
 		//sleeping for set amount of time
 		Nanosleep(time, remaining_time);
 		
-		if (i == NUM_FRAMES - 1)
-		{
-			i = -1;
-		}
+		
 	}
 
 }
