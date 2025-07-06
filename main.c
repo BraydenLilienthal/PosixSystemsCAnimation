@@ -81,7 +81,10 @@ int main(int argc, char* argv[])
 		
 		//sleeping for set amount of time
 		
-		
+		if (i == atoi(argv[2]))
+		{
+			i = 0;
+		}
 		
 	}
 	
