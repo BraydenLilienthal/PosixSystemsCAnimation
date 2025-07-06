@@ -1,11 +1,12 @@
-#include <string.h>
+#include <fcntl.h>
 #include <unistd.h>
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <errno.h>
 
-#define NUM_FRAMES 12
+
 
 void Nanosleep(struct timespec time, struct timespec remaining_time)
 {
@@ -16,7 +17,7 @@ void Nanosleep(struct timespec time, struct timespec remaining_time)
 	}
 };
 
-int main(void)
+int main(int argc, char* argv[])
 {
 	//write(STDOUT_FILENO, "HELLLOOOO", 10);
 
@@ -26,60 +27,62 @@ int main(void)
 	struct timespec time;
 	struct timespec remaining_time;
 	time.tv_sec = 0;
-	time.tv_nsec = 200000000;
+	time.tv_nsec = 100000000;
 
 
-	//I am using a defined int to represent the number of frames (drawings in the animation), that the animation will use. This can be changed and you can insert a given number of frames into the vector of frames
-	//i recommend changing the size of each char array to the size of your largest char array/
-	char animation[NUM_FRAMES][521] =
-	{
-		"                           //\n       _                  [||]-\n        \\`*-.                    \n(ZZ.. )  )  _`-.         \n(ZZ..)  .  : `. .   (ZZZ..)\n        : _   '  \\               \n      _ ; -` _.   `*-._          \n    ( ) `-.-'          `-.       \n          ;       `       `.     \n          :.       .        \\    \n          . \\  .   :   .-'   .   \n          '  `+.;  ;  '      :   \n          :  '  |    ;       ;-. \n          ; '   : :`-:     _.`* ;\n       .*' /  .*' ; .*`- +'  `*' \n       `*-*   `*-*  `*-*'\n\n\n",
-		"                //	\n       _       [||]- \n        \\`*-.                    \n(ZZ.. )  )  _`-.                 \n(ZZ..)  .  : `. .                \n        : _   '  \\               \n        ; -` _.   `*-._          \n        `-.-'          `-.       \n          ;       `       `.     \n         :.        .        \\    \n          . \\  .   :   .-'   .   \n          '  `+.;  ;  '      : \n          :  '  |    ;       ;-. \n          ; '   : :`-:     _.`* ;\n       .*' /  .*' ; .*`- +'  `*' \n       `*-*   `*-*  `*-*'\n\n\n", 
-		"       \n        \\`*-.                    \n(ZZ.. )  )  _`-.                 \n(ZZ..)  .  : `. .                \n        : _   '  \\               \n        ; -` _.   `*-._          \n        `-.-'          `-.       \n  \\\\       ;       `       `.     \n -[||]    :.      .        \\ ]  \n          . \\  .   :   .-'   .   \n          '  `+.;  ;  '      :   \n          :  '  |    ;       ;-. \n          ; '   : :`-:     _.`* ;\n       .*' /  .*' ; .*`- +'  `*' \n       `*-*   `*-*  `*-*'\n\n\n",
-		"       _                        \n  !    \\`*-.   ??\n        )  _`-.\n    !  .  : `. .     ?!         \n       : _   '  \\               \n       ; *` _.   `*^._          \n       `-.-'    ^     `}^       \n   \\\\    ;    ^   `      ^.     \n-[||]    :.       . ^      \\    \n         . \\  .   :   .-'   .   \n         '  `+.;  ;  '      :   \n         '  '  |    ;       ;\\-. \n        /  '   : :`-:     _.`* ;\n     .*'  /  .*' ; .*`- +'  `*' \n     `*-*    `*-*  `*-*'\n\n\n",
-		"       _                        \n       \\`*-.                    \n        )  _`-.                 \n       .  : `. .                \n       : _   '  \\               \n       ; o  _.   `*-._          \n       `-.-'          `-.       \n  \\\\     ;       `       `.     \n-[||]    : .      .        \\    \n         . \\  .   :   .-'   . _  \n         '  `+.;  ;  '      :< \\   \n         /  -'  |    ;       ;: . \n     .*'- '    : :`-:     _.`* ; \n     `*-*'   .*' ; .*`- +'  `*' \n             `*-*  `*-*'\n\n\n",
-		"       _                        \n       \\`+-.   *                 \n     *  )  _`-.  *             \n       .  : `. .              \n       : /   '  \\               \n       ; o  _.   `*-._          \n   \\\\  `-.-'          `-.       \n-[||]   ;   '     `       `.     \n         : .      .        \\    \n         . \\  .   :   .-'   .     \n         '  `+.;  ;  '      : /'`\\\n        /  -'  |    ;       ;< .\\/\n     .*'- '    : :`-:     _.`* ;\n     `*-*'   .*' ; .*`- +'  `*' \n             `*-*  `*-*'\n\n\n",
-		"       _\n       \\`*-.           !!\n !      )  _`-.   !!\n       .  : `. .               !!!\n  !!   : /   '  \\\n       ; o   _.   `*-._ \n  \\\\   `--.-'          `-. \n-[||]     ;       `       `.\n         : .      .        \\    \n         . \\  .   :   .-'   .   _\n         /  `+.;  ;  '      : /'`*\\   \n     .*'-  -'  |    ;       ;< ./ }\n     `*-*''    : :`-:     _.`* ;\n             .*' ; .*`- +'  `*' \n             `*-*  `*-*'\n\n\n",
-		"       _\n       \\`*-.           !!        \n !      )  _`-.   !!             \n       .  : `. .               !!!\n  !!   : /   '  \\               \n       ; o   _.   `*-._\n   \\\\  `--.-'          `-.       \n -[||]    ;       `       `.     \n     .*'+*-: .:    .        \\    \n     `*-* _ -. .      .-'   .   _\n             :       '      : /'`*\\   \n;|    ;       ;< ./ }\n               : :`-:     _.`* ; \n             .*' ; .*`- +'  `*' \n             `*-*  `*-*'\n\n\n",
-		"       _\n       \\`*-.           ??\n??      )  _`-.   ??\n       .  : `. .               ??\n       : ^   '  \\               \\\\\n       ; o   _.   `*-._       -[||]\n       `--.-'          `-.       \n          ;       `       `.     \n     .*'+*-: .:    .        \\    \n     `*-* _ -. .      .-'   .   _\n             :       '      : /'`*\\   \n              ;|    ;       ;< ./ }\n               : :`-:     _.`* ;\n             .*' ; .*`- +'  `*' \n             `*-*  `*-*'\n\n\n",
-		"       _\n       \\`*-.           ??\n ??     )  _`-.   ??\n       .  : `. .               ??\n       : -   '  \\                  \\\\\n       ; o   _.   `*-._          -[||]\n       `--.-'          `-.       \n          ;       `       `.     \n          -: .:    .        \\\n          ; -. .      .-'   .   _\n         . \\  .   :   .-'   .  _\n         /  `+.;  ;  '      : < }    \n     .*'-  -'  |    ;       ;- +\n     `*-*''    : :`-:     _.`* ,\n             .*' ; .*`- +'  `*' \n             `*-*  `*-*'",
-		"       _\n       \\`*-.           ?? \n ??      )  _`-.   ??\n       .  : `. .               ??\n       : -   '  \\                 \n       ; *   _.   `*-._           \n       `--.-'          `-.       \n          ;    ^   `      ^.     \n        :.       . ^      \\\\    \n         . \\  .   :   .-'   .   \n         '  `+.;  ;  '      :   \n         '  '  |    ;       ;\\-. \n        /  '   : :`-:     _.`* ;\n     .*'  /  .*' ; .*`- +'  `*' \n     `*-*    `*-*  `*-*'\n\n\n",
-		"       _\n        \\`*-.\n(ZZ.. )  )  _`-.\n(ZZ..)  .  : `. .\n        : _   '  \\\n        ; -` _.   `*-._\n        `-.-'          `-.\n          ;       `       `.\n          :.       .        \\\n          . \\  .   :   .-'   .   \n          '  `+.;  ;  '      :   \n          :  '  |    ;       ;-. \n          ; '   : :`-:     _.`* ;\n       .*' /  .*' ; .*`- +'  `*' \n       `*-*   `*-*  `*-*'\n\n\n",
-	};
+	//this is the current frame stored as a string
+	char currFrame[1000];
 	
 	//this stores the sizes of each animatiom, so we can just access it in a loop easier.
-	int animationSize[NUM_FRAMES] =
+	int animationSize;
+
+
+	for (int i = 1; i <= atoi(argv[2]); i++)
 	{
-		521,
-		511,
-		479,
-		459,
-		497,
-		495,
-		427,
-		461,
-		466,
-		494,
-		457,
-		519
+		
+
+		//current file name
+		char currentFile[200];
+
+		sprintf(currentFile, "%s%d.txt", argv[1], i);
 
 
+		int animFile = open(currentFile, O_RDONLY);
+		if (animFile == -1)
+		{
+			exit(EXIT_FAILURE);
+		}
 
-	};
+		animationSize = read(animFile, currFrame, 1000);
+		
+		Nanosleep(time, remaining_time);
 
-
-	for (int i = 0; i < NUM_FRAMES; i++)
-	{
 		//clearing the terminal each time we go to display our frame
 		system("clear");
 
-		//displaying frame to terminal
-		write(STDOUT_FILENO, animation[i], animationSize[i]);
+		if (animationSize == -1)
+		{
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+			//displaying frame to terminal
+			write(STDOUT_FILENO, currFrame, animationSize);
+			write(STDOUT_FILENO, "\n\n\n", 4);
+			fflush(stdout);
+
+		}
+
+		//closing file
+		if (close(animFile) == -1)
+		{
+			exit(EXIT_FAILURE);
+		}
 		
 		//sleeping for set amount of time
-		Nanosleep(time, remaining_time);
+		
 		
 		
 	}
-
+	
 }
